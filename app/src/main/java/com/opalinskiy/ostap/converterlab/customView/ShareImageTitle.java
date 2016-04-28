@@ -35,7 +35,4 @@ public class ShareImageTitle extends LinearLayout {
         tvRegion = (TextView) findViewById(R.id.tv_region_SIT);
         tvCity = (TextView) findViewById(R.id.tv_city_SIT);
     }
-
-
-
 }

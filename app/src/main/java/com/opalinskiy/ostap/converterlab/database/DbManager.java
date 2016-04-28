@@ -1,4 +1,4 @@
-package com.opalinskiy.ostap.converterlab.utils.databaseUtils;
+package com.opalinskiy.ostap.converterlab.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -127,12 +127,6 @@ public class DbManager {
         }
     }
 
-//    public void writeListOfOrganisationsToDb(List<Organisation> list) {
-//        database.delete(dbConstants.TABLE_ORGANIZATIONS, null, null);
-//        for (int i = 0; i < list.size(); i++) {
-//            writeOrganisationToDb(list.get(i));
-//        }
-//    }
 
     // write whole info from organisation to db
    private void writeDataIntoOrgsTable(Organisation org) {
@@ -180,16 +174,6 @@ public class DbManager {
             smartWriteIntoDB(list.get(i));
         }
     }
-
-    //metod to update organisation
-//    public void updateOrganisation(ContentValues cv, Organisation org) {
-//        database.update(dbConstants.TABLE_ORGANIZATIONS, cv, "_id=" + org.getId(), null);
-//    }
-
-//    public void updateCourses(ContentValues cv, Organisation org) {
-//        database.update(dbConstants.TABLE_COURSES, cv, "_id=" + org.getId(), null);
-//    }
-
 
     private void writeOrganisationToDb(Organisation org) {
         database.insert(dbConstants.TABLE_ORGANIZATIONS, null, getCVFromOrganisation(org));
@@ -246,14 +230,6 @@ public class DbManager {
                 "orgTypes._id=organizations.orgType";
         return database.rawQuery(query, null);
     }
-
-
-//    public void writeAllCoursesToDb(List<Organisation> list) {
-//        database.delete(dbConstants.TABLE_EXCHANGE_RATES, null, null);
-//        for (int i = 0; i < list.size(); i++) {
-//            writeExchangeRatesToDb(list.get(i));
-//        }
-//    }
 
     private void writeExchangeRatesToDb(Organisation organisation) {
         List<Currency> listCurrencies = organisation.getCurrencies().getCurrencyList();

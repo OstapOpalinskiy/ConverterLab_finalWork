@@ -11,7 +11,7 @@ import android.util.Log;
 import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.api.Api;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
-import com.opalinskiy.ostap.converterlab.utils.databaseUtils.DbManager;
+import com.opalinskiy.ostap.converterlab.database.DbManager;
 import com.opalinskiy.ostap.converterlab.interfaces.ConnectCallback;
 import com.opalinskiy.ostap.converterlab.model.DataResponse;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
@@ -30,7 +30,7 @@ public class LoaderService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(Constants.LOG_TAG, "handle intent service");
+
         dbManager = new DbManager(getApplicationContext());
         dbManager.open();
         prepareNotification();

@@ -1,4 +1,4 @@
-package com.opalinskiy.ostap.converterlab.utils.databaseUtils;
+package com.opalinskiy.ostap.converterlab.database;
 
 
 import android.content.Context;

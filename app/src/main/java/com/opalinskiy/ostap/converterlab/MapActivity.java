@@ -65,16 +65,6 @@ public class MapActivity extends AbstractMapActivity {
                        } catch (ExecutionException e) {
                            e.printStackTrace();
                        }
-//                    String address = getIntent().getStringExtra("address");
-////                    Log.d("TAG", address);
-////                    if (getLatLngFromAddress(address) != null) {
-////                        LatLng currentLatLng = new LatLng(getLatLngFromAddress(address).latitude,
-////                                getLatLngFromAddress(address).longitude);
-////                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13));
-////                        Log.d("TAG", getLatLngFromAddress(address).latitude + "");
-//                    } else {
-//                        Toast.makeText(MapActivity.this, "Cant find address on the map", Toast.LENGTH_SHORT).show();
-//                    }
                    }
                });
            } else {
@@ -84,42 +74,6 @@ public class MapActivity extends AbstractMapActivity {
            showAlertDialog(R.string.no_interent_title, R.string.no_internet_msg );
        }
     }
-//
-//    class LocationLoader extends AsyncTask<String, Void, LatLng> {
-//
-//        @Override
-//        protected LatLng doInBackground(String... params) {
-//
-//            Geocoder coder = new Geocoder(MapActivity.this);
-//            try {
-//                ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(params[0], 5);
-//                Log.d("TAG", "found addresses: " + adresses.size());
-//                if (adresses.size() > 0) {
-//                    Address add = adresses.get(0);
-//                    double longitude = add.getLongitude();
-//                    double latitude = add.getLatitude();
-//                    LatLng res = new LatLng(latitude, longitude);
-//                    return res;
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(LatLng latLng) {
-//            super.onPostExecute(latLng);
-//            if (latLng != null) {
-//                Log.d("TAG", "onPostExecute");
-//                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-//            } else {
-//                Toast.makeText(MapActivity.this, "Cannot find location", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

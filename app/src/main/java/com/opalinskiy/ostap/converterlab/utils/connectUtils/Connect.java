@@ -77,19 +77,6 @@ public class Connect {
         );
     }
 
-    private void parseData(Object jsonObject, ModelResponse modelObject, ConnectCallback callback) {
-        if (null != modelObject) {
-            try {
-                modelObject.configure(jsonObject);
-                callback.onSuccess(modelObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void getRequestSynchronous(Context context, ModelResponse modelResponse, ConnectCallback callback) throws IOException {
         URL url = new URL(Constants.DATA_SOURCE_KEY);
 
@@ -113,4 +100,19 @@ public class Connect {
             }
         }
     }
+
+
+    private void parseData(Object jsonObject, ModelResponse modelObject, ConnectCallback callback) {
+        if (null != modelObject) {
+            try {
+                modelObject.configure(jsonObject);
+                callback.onSuccess(modelObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

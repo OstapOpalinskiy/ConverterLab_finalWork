@@ -28,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),Constants.THIRTY_MINUTES, pendingIntent);
         }
-        Log.d(Constants.LOG_TAG, "ALARM WORKS!!!");
+
         context.startService(serviceIntent);
     }
 }

@@ -1,6 +1,5 @@
 package com.opalinskiy.ostap.converterlab;
 
-import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -28,7 +27,7 @@ import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.interfaces.ConnectCallback;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 import com.opalinskiy.ostap.converterlab.model.DataResponse;
-import com.opalinskiy.ostap.converterlab.utils.databaseUtils.DbManager;
+import com.opalinskiy.ostap.converterlab.database.DbManager;
 import com.opalinskiy.ostap.converterlab.receivers.AlarmReceiver;
 import com.opalinskiy.ostap.converterlab.services.LoaderService;
 
@@ -111,8 +110,8 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
             @Override
             public void onFailure() {
                 Log.d(Constants.LOG_TAG, "onFailure in activity=");
+                //TODO: зробити звернення до бд в іншому потоці, додати прогрес
                 organisations = dbManager.readListOfOrganisationsFromDB();
-                Log.d(Constants.LOG_TAG, "list size = " + organisations.size());
                 dbManager.setRatesForList(organisations);
                if(organisations.size() == 0){
                    showAlertDialog(R.string.no_data, R.string.no_data_msg);
@@ -143,7 +142,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
     private void refreshData() {
        loadDataFromServer();
-      //  swipeRefreshLayout.setRefreshing(false);
     }
 
     private void showList(List<Organisation> list) {

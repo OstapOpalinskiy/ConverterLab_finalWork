@@ -1,4 +1,4 @@
-package com.opalinskiy.ostap.converterlab;
+package com.opalinskiy.ostap.converterlab.fragments;
 
 
 import android.app.Dialog;
@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 
 import java.io.File;
@@ -28,10 +29,11 @@ public class ShareFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d("TAG", "on create dialog" );
+
         Dialog dialog = new Dialog(getActivity());
         Bitmap bitmap = (Bitmap) getArguments().get(Constants.BITMAP_KEY);
         final String filePath = getArguments().getString(Constants.FILE_PATH_KEY);
+
         dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -40,6 +42,7 @@ public class ShareFragment extends DialogFragment {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View layout = layoutInflater.inflate(R.layout.share_fragment, null);
+
         ImageView imageView = (ImageView) layout.findViewById(R.id.iv_bitmap_SF);
         Button shareButton = (Button) layout.findViewById(R.id.btn_share_SF);
 
