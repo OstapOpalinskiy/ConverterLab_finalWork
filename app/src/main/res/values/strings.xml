@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Converter Lab</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="google_maps_key">AIzaSyBgFZQek2FS-sItDIEZ_KUhpk9eG8UjRSQ</string>
+    <string name="no_maps">Карты недоступны</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="ask_bid">Покупка/\nПродажа</string>
+    <string name="share">Share</string>
+    <string name="share_button">SHARE</string>
+    <string name="ok">Ok</string>
+    <string name="no_map">Карты недоступны</string>
+    <string name="no_map_msg">Сервисы гугл не установленыю</string>
+    <string name="no_interent_title">Нет интернета</string>
+    <string name="no_internet_msg">Подключите устройство к интернету</string>
+    <string name="no_data">Нет доступных данных</string>
+    <string name="no_data_msg">Для получения данных приложению нужен доступ к интернету</string>
+    <string name="site">Официальный сайт компании:</string>
+    <string name="region">Область:</string>
+    <string name="city">Город:</string>
+    <string name="address">Адрес:</string>
+    <string name="phone">Телефон:</string>
+</resources>
