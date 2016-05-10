@@ -1,15 +1,13 @@
 package com.opalinskiy.ostap.converterlab;
 
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.content.DialogInterface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,62 +15,50 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractMapActivity;
+import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.utils.MapLoader;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectionDetector;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
-public class MapActivity extends AbstractMapActivity {
+public class MapActivity extends AbstractMapActivity implements LoaderManager.LoaderCallbacks<LatLng> {
     private GoogleMap map;
-    private MapLoader locationLoader;
     private ConnectionDetector connectionDetector;
+    private String city;
+    private String address;
+    private MapLoader mapLoader;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         connectionDetector = new ConnectionDetector(this);
-       if(connectionDetector.isConnected()){
-           if (isGoogleMapsAvailable()) {
-               setContentView(R.layout.activity_map);
+        if (connectionDetector.isConnected()) {
+            if (isGoogleMapsAvailable()) {
+                setContentView(R.layout.activity_map);
 
-               ((MapFragment) getFragmentManager().findFragmentById(R.id.google_map)).getMapAsync(new OnMapReadyCallback() {
-                   @Override
-                   public void onMapReady(GoogleMap googleMap) {
-                       map = googleMap;
-                       map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                       String address = getIntent().getStringExtra("address");
-                       String city = getIntent().getStringExtra("city");
+                ((MapFragment) getFragmentManager().findFragmentById(R.id.google_map)).getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        map = googleMap;
+                        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-                       ActionBar ab =  getSupportActionBar();
-                       ab.setTitle(city);
-                       ab.setSubtitle(address);
-                       ab.setDisplayHomeAsUpEnabled(true);
+                        address = getIntent().getStringExtra("address");
+                        city = getIntent().getStringExtra("city");
 
-                       locationLoader = new MapLoader();
-                       locationLoader.execute(city, address);
-                       try {
-                           LatLng latLng = locationLoader.get();
-                           if(!(latLng.latitude == 0.0 && latLng.longitude == 0.0)){
-                               map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLoader.get(), locationLoader.getZoom()));
-                           }else{
-                               showAlertDialog(R.string.no_interent_title, R.string.no_internet_msg );
-                           }
-                       } catch (InterruptedException e) {
-                           e.printStackTrace();
-                       } catch (ExecutionException e) {
-                           e.printStackTrace();
-                       }
-                   }
-               });
-           } else {
-               showAlertDialog(R.string.no_map, R.string.no_map_msg );
-           }
-       }else{
-           showAlertDialog(R.string.no_interent_title, R.string.no_internet_msg );
-       }
+                        getLoaderManager().initLoader(Constants.MAP_LOADER_ID, null, MapActivity.this);
+                        mapLoader.forceLoad();
+
+                        ActionBar ab = getSupportActionBar();
+                        ab.setTitle(city);
+                        ab.setSubtitle(address);
+                        ab.setDisplayHomeAsUpEnabled(true);
+                    }
+                });
+            } else {
+                showAlertDialog(R.string.no_map, R.string.no_map_msg);
+            }
+        } else {
+            showAlertDialog(R.string.no_interent_title, R.string.no_internet_msg);
+        }
     }
 
     @Override
@@ -94,5 +80,27 @@ public class MapActivity extends AbstractMapActivity {
                 });
         AlertDialog alert = ad.create();
         alert.show();
+    }
+
+    @Override
+    public Loader<LatLng> onCreateLoader(int id, Bundle args) {
+        Log.d(Constants.LOG_TAG, "onCreate MapLoader");
+        mapLoader = new MapLoader(this, city, address);
+        return mapLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<LatLng> loader, LatLng data) {
+        Log.d(Constants.LOG_TAG, "onLoadFinished MapLoader");
+        if (!(data.latitude == 0.0 && data.longitude == 0.0)) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(data, mapLoader.getZoom()));
+        } else {
+            showAlertDialog(R.string.no_interent_title, R.string.no_internet_msg);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<LatLng> loader) {
+
     }
 }

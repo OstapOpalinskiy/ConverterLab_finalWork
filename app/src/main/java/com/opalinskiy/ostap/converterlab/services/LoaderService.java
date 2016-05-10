@@ -50,7 +50,7 @@ public class LoaderService extends IntentService {
                 organisations = dataResponse.getOrganisations();
                 dbManager.setRatesVariationForList(organisations);
                 dbManager.writeAllDataToDb(dataResponse);
-                updateNotification("Loaded successfully");
+              //  updateNotification("Loaded successfully");
             }
 
             @Override
@@ -67,7 +67,7 @@ public class LoaderService extends IntentService {
                 .setContentText("")
                 .setContentTitle("Loading...")
                 .setSmallIcon(R.drawable.ic_link)
-                .setOngoing(true);
+                .setOngoing(false);
     }
 
     private void updateNotification(String text) {

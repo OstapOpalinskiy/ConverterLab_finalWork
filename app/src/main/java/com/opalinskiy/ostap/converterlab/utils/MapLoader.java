@@ -1,9 +1,13 @@
 package com.opalinskiy.ostap.converterlab.utils;
 
+import android.content.AsyncTaskLoader;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.opalinskiy.ostap.converterlab.constants.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,19 +23,28 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 
-public class MapLoader extends AsyncTask<String, Void, LatLng> {
+public class MapLoader extends AsyncTaskLoader<LatLng> {
     private int zoom;
+    String address;
+    String city;
 
+    public MapLoader(Context context, String city, String address) {
+        super(context);
+        this.address = address;
+        this.city = city;
+    }
 
     @Override
-    protected LatLng doInBackground(String... params) {
-        if (params.length > 2) {
+    public LatLng loadInBackground() {
+        Log.d(Constants.LOG_TAG, "do in background MapLoader");
+        if (city == null || address == null) {
             return null;
         } else {
-            setZoom(params[1]);
-            return parseCoordinates(getUrl(params[0], params[1]));
+            setZoom(address);
+            return parseCoordinates(getUrl(city, address));
         }
     }
+
 
     private void setZoom(String _address) {
         if (validateText(_address)) {
@@ -105,7 +118,7 @@ public class MapLoader extends AsyncTask<String, Void, LatLng> {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         LatLng latLng = new LatLng(lat, lng);
@@ -117,7 +130,7 @@ public class MapLoader extends AsyncTask<String, Void, LatLng> {
     }
 
     public static boolean validateText(String text) {
-        if(TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(text)) {
             return false;
         } else {
             return true;
