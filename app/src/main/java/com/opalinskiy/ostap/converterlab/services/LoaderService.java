@@ -55,7 +55,7 @@ public class LoaderService extends IntentService {
 
             @Override
             public void onFailure() {
-                updateNotification("Cant load data");
+                updateNotification("Can't update database");
                 Log.d(Constants.LOG_TAG, "On failure in service");
             }
         });

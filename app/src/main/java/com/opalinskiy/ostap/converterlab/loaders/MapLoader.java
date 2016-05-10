@@ -1,8 +1,7 @@
-package com.opalinskiy.ostap.converterlab.utils;
+package com.opalinskiy.ostap.converterlab.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,8 +24,8 @@ import java.net.URLEncoder;
 
 public class MapLoader extends AsyncTaskLoader<LatLng> {
     private int zoom;
-    String address;
-    String city;
+    private String address;
+    private String city;
 
     public MapLoader(Context context, String city, String address) {
         super(context);

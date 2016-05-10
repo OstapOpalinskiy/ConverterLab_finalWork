@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
@@ -40,25 +41,29 @@ public class Connect {
     }
 
     public void getRequestWithParam(RequestParams requestParams, final ModelResponse modelResponse, final ConnectCallback callback) {
+        final WeakReference<ConnectCallback> ref = new WeakReference<ConnectCallback>(callback);
         client.get(Constants.DATA_SOURCE_KEY, requestParams, new JsonHttpResponseHandler() {
 
                     @Override
                     public void onProgress(int bytesWritten, int totalSize) {
                         super.onProgress(bytesWritten, totalSize);
                         long progressPercentage = (long) ((bytesWritten * 10) / totalSize);
-                        callback.onProgress(progressPercentage);
+                        if(ref != null){
+                            ref.get().onProgress(progressPercentage);
+                        }
+
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d(Constants.LOG_TAG, "success");
-                        parseData(response, modelResponse, callback);
+                        parseData(response, modelResponse, ref.get());
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         Log.d(Constants.LOG_TAG, "successArray");
-                        parseData(response, modelResponse, callback);
+                        parseData(response, modelResponse, ref.get());
                     }
 
                     @Override
@@ -114,5 +119,4 @@ public class Connect {
             }
         }
     }
-
 }

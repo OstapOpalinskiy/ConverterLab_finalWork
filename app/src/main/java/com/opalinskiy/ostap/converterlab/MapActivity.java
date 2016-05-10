@@ -16,7 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractMapActivity;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
-import com.opalinskiy.ostap.converterlab.utils.MapLoader;
+import com.opalinskiy.ostap.converterlab.loaders.MapLoader;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectionDetector;
 
 public class MapActivity extends AbstractMapActivity implements LoaderManager.LoaderCallbacks<LatLng> {

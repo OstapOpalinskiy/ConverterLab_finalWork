@@ -27,7 +27,7 @@ import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractActionActivi
 import com.opalinskiy.ostap.converterlab.adapters.OrganisationsAdapter;
 import com.opalinskiy.ostap.converterlab.api.Api;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
-import com.opalinskiy.ostap.converterlab.database.AsyncDbReader;
+import com.opalinskiy.ostap.converterlab.loaders.AsyncDbReader;
 import com.opalinskiy.ostap.converterlab.interfaces.ConnectCallback;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 import com.opalinskiy.ostap.converterlab.model.DataResponse;
@@ -120,7 +120,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
             @Override
             public void onFailure() {
-                Log.d(Constants.LOG_TAG, "onFailure in activity=");
                 loader.forceLoad();
                 notificationManager.cancel(0);
             }
