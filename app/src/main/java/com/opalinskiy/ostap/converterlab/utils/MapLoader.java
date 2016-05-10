@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 public class MapLoader extends AsyncTask<String, Void, LatLng> {
     private int zoom;
 
+
     @Override
     protected LatLng doInBackground(String... params) {
         if (params.length > 2) {

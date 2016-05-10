@@ -2,11 +2,14 @@ package com.opalinskiy.ostap.converterlab;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
@@ -24,18 +27,20 @@ import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractActionActivi
 import com.opalinskiy.ostap.converterlab.adapters.OrganisationsAdapter;
 import com.opalinskiy.ostap.converterlab.api.Api;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
+import com.opalinskiy.ostap.converterlab.database.AsyncDbReader;
 import com.opalinskiy.ostap.converterlab.interfaces.ConnectCallback;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 import com.opalinskiy.ostap.converterlab.model.DataResponse;
 import com.opalinskiy.ostap.converterlab.database.DbManager;
 import com.opalinskiy.ostap.converterlab.receivers.AlarmReceiver;
 import com.opalinskiy.ostap.converterlab.services.LoaderService;
+import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectionDetector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AbstractActionActivity implements SwipeRefreshLayout.OnRefreshListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Organisation>> {
 
     private List<Organisation> organisations;
     private RecyclerView recyclerView;
@@ -44,6 +49,9 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     private Snackbar snackbar;
+    private Loader<List<Organisation>> loader;
+    private ProgressDialog ringProgressDialog;
+    private ConnectionDetector connectionDetector;
 
 
     @Override
@@ -53,6 +61,8 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
         init();
         startAlarmReceiver();
         loadDataFromServer();
+        startRingProgress();
+        updateNotification("Loading data...");
     }
 
     @Override
@@ -101,25 +111,18 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 Log.d(Constants.LOG_TAG, "On success");
                 DataResponse dataResponse = (DataResponse) object;
                 organisations = dataResponse.getOrganisations();
-                updateNotification("Loading successful");
                 showList(organisations);
                 snackbar.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
+                ringProgressDialog.dismiss();
+                notificationManager.cancel(0);
             }
 
             @Override
             public void onFailure() {
                 Log.d(Constants.LOG_TAG, "onFailure in activity=");
-                //TODO: зробити звернення до бд в іншому потоці, додати прогрес
-                organisations = dbManager.readListOfOrganisationsFromDB();
-                dbManager.setRatesForList(organisations);
-               if(organisations.size() == 0){
-                   showAlertDialog(R.string.no_data, R.string.no_data_msg);
-               }
-                updateNotification("Loaded from database");
-                snackbar.dismiss();
-                showList(organisations);
-                swipeRefreshLayout.setRefreshing(false);
+                loader.forceLoad();
+                notificationManager.cancel(0);
             }
         });
     }
@@ -133,6 +136,8 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
         dbManager.open();
         snackbar = Snackbar
                 .make(swipeRefreshLayout, "", Snackbar.LENGTH_INDEFINITE);
+        connectionDetector = new ConnectionDetector(this);
+        getLoaderManager().initLoader(Constants.LOADER_ID, null, MainActivity.this);
     }
 
     private void startLoaderService() {
@@ -141,7 +146,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
     }
 
     private void refreshData() {
-       loadDataFromServer();
+        loadDataFromServer();
     }
 
     private void showList(List<Organisation> list) {
@@ -160,7 +165,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(), Constants.THIRTY_MINUTES, pendingIntent);
-        }else {
+        } else {
             startLoaderService();
         }
     }
@@ -171,7 +176,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 .setContentText("")
                 .setContentTitle("Loading...")
                 .setSmallIcon(R.drawable.ic_link)
-                .setOngoing(true);
+                .setOngoing(false);
     }
 
     private void updateNotification(String text) {
@@ -203,6 +208,39 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 });
         AlertDialog alert = ad.create();
         alert.show();
+    }
+
+    @Override
+    public Loader<List<Organisation>> onCreateLoader(int id, Bundle args) {
+        Log.d(Constants.LOG_TAG, "onCreateLoader");
+        if (loader == null) {
+            loader = new AsyncDbReader(this, dbManager);
+        }
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Organisation>> loader, List<Organisation> data) {
+        Log.d(Constants.LOG_TAG, "loaded list size:" + data.size());
+        organisations = data;
+        ringProgressDialog.dismiss();
+        if (organisations.size() == 0) {
+            showAlertDialog(R.string.no_data, R.string.no_data_msg);
+        }
+        snackbar.dismiss();
+        showList(organisations);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Organisation>> loader) {
+
+    }
+
+    private void startRingProgress() {
+        ringProgressDialog = ProgressDialog.show(MainActivity.this,
+                getString(R.string.loading), getString(R.string.loading_msg), true);
+        ringProgressDialog.setCancelable(true);
     }
 }
 

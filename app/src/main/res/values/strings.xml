@@ -19,4 +19,7 @@
     <string name="city">Город:</string>
     <string name="address">Адрес:</string>
     <string name="phone">Телефон:</string>
+    <string name="loading">Загрузка ...</string>
+    <string name="loading_msg">Подождите происходит загрузка данных</string>
+    <string name="loading_msg_inet">Данные загружаются из интернета</string>
 </resources>

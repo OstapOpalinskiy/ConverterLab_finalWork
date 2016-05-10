@@ -22,4 +22,5 @@ public class Constants {
    public static final String DIALOG_FRAGMENT_TAG = "share dialog";
    public static final String FILE_PATH_KEY = "file name key";
    public static final String CALL_ALLOWED = "call allowed";
+   public static final int LOADER_ID = 0;
 }
