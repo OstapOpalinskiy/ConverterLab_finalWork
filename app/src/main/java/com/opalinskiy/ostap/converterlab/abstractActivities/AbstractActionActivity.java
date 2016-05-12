@@ -15,6 +15,7 @@ import com.opalinskiy.ostap.converterlab.MapActivity;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 
+
 import java.io.Serializable;
 
 /**

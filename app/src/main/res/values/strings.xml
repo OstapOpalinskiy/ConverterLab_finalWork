@@ -22,4 +22,6 @@
     <string name="loading">Загрузка ...</string>
     <string name="loading_msg">Подождите происходит загрузка данных</string>
     <string name="loading_msg_inet">Данные загружаются из интернета</string>
+    <string name="db_updated">База данных обновлена</string>
+    <string name="db_cant_update">Не удалось обновить базу данных</string>
 </resources>

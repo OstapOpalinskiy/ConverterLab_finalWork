@@ -43,7 +43,7 @@ public class DbManager {
     }
 
     public void writeAllDataToDb(DataResponse response) {
-        smartWriteIntoDbList(response.getOrganisations());
+        smartWriteIntoDbList(response.getOrganizations());
         writeMapToDb(response.getCurrencies(), dbConstants.TABLE_CURRENCIES);
         writeMapToDb(response.getCities(), dbConstants.TABLE_CITIES);
         writeMapToDb(response.getRegions(), dbConstants.TABLE_REGIONS);

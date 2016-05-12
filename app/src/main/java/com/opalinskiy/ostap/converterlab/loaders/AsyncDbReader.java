@@ -9,6 +9,7 @@ import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.database.DbManager;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 
+
 import java.util.List;
 
 public class AsyncDbReader extends AsyncTaskLoader<List<Organisation>> {
@@ -22,7 +23,6 @@ public class AsyncDbReader extends AsyncTaskLoader<List<Organisation>> {
 
     @Override
     public List<Organisation> loadInBackground() {
-        Log.d(Constants.LOG_TAG, "load in background");
         organisations = dbManager.readListOfOrganisationsFromDB();
         dbManager.setRatesForList(organisations);
         return organisations;

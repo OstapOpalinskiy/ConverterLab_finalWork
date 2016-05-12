@@ -45,8 +45,8 @@ public class DetailActivity extends AbstractActionActivity {
     private FloatingActionButton buttonMap;
     private FloatingActionButton buttonLink;
     private FloatingActionButton buttonCall;
-    private FrameLayout semiTransparentFrame;
     private boolean isMenuOpened;
+    private FrameLayout semiTransparentFrame;
     private ShareFragment dialog;
 
 

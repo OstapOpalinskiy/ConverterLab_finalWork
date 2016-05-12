@@ -1,7 +1,6 @@
 package com.opalinskiy.ostap.converterlab.customView;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -10,9 +9,7 @@ import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.model.Currency;
 
-/**
- * Created by Evronot on 24.04.2016.
- */
+
 public class CurrencyListElementView extends RelativeLayout {
     private TextView tvCurrencyName;
     private TextView tvAsk;

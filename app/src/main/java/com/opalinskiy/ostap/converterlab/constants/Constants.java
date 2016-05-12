@@ -4,7 +4,7 @@ public class Constants {
    public static final String LOG_TAG = "TAG";
    public static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
    public static final String ARG_ERROR_CODE = "errorCode";
-   public static final String DATA_SOURCE_KEY = "http://resources.finance.ua/ru/public/currency-cash.json";
+   public static final String DATA_SOURCE_KEY = "http://resources.finance.ua";
    public static final String ORGANISATIONS_KEY = "organizations";
    public static final String REGIONS_KEY = "regions";
    public static final String CURRENCIES_KEY = "currencies";

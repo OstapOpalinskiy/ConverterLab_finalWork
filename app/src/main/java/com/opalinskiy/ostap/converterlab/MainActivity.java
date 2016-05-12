@@ -23,21 +23,29 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractActionActivity;
 import com.opalinskiy.ostap.converterlab.adapters.OrganisationsAdapter;
-import com.opalinskiy.ostap.converterlab.api.Api;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.loaders.AsyncDbReader;
-import com.opalinskiy.ostap.converterlab.interfaces.ConnectCallback;
-import com.opalinskiy.ostap.converterlab.model.Organisation;
-import com.opalinskiy.ostap.converterlab.model.DataResponse;
 import com.opalinskiy.ostap.converterlab.database.DbManager;
+import com.opalinskiy.ostap.converterlab.model.DataResponse;
+import com.opalinskiy.ostap.converterlab.model.Organisation;
 import com.opalinskiy.ostap.converterlab.receivers.AlarmReceiver;
 import com.opalinskiy.ostap.converterlab.services.LoaderService;
+import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectRetrofit;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectionDetector;
+import com.opalinskiy.ostap.converterlab.utils.connectUtils.CustomDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AbstractActionActivity implements SwipeRefreshLayout.OnRefreshListener,
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Organisation>> {
@@ -62,7 +70,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
         startAlarmReceiver();
         loadDataFromServer();
         startRingProgress();
-        updateNotification("Loading data...");
+        updateNotification(getString(R.string.loading));
     }
 
     @Override
@@ -81,7 +89,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Log.d(Constants.LOG_TAG, "onTextChange");
         String criteria = newText.toLowerCase();
         List<Organisation> filteredList = new ArrayList();
         for (int i = 0; i < organisations.size(); i++) {
@@ -96,34 +103,41 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
     }
 
     private void loadDataFromServer() {
-        Api.getDataResponse(new ConnectCallback() {
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(DataResponse.class, new CustomDeserializer());
+        final Gson gson = gsonBuilder.create();
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(Constants.DATA_SOURCE_KEY)
+                .build();
+
+        ConnectRetrofit connection = retrofit.create(ConnectRetrofit.class);
+        Call<DataResponse> call = connection.connect();
+
+        call.enqueue(new Callback<DataResponse>() {
 
             @Override
-            public void onProgress(long percentage) {
-                String message = "Progress:" + percentage + "%";
-                updateNotification(message);
-                snackbar.setText(message);
-                snackbar.show();
-            }
-
-            @Override
-            public void onSuccess(Object object) {
-                Log.d(Constants.LOG_TAG, "On success");
-                DataResponse dataResponse = (DataResponse) object;
-                organisations = dataResponse.getOrganisations();
+            public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
+                DataResponse data = response.body();
+                organisations = data.getOrganizations();
                 showList(organisations);
                 snackbar.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
                 ringProgressDialog.dismiss();
                 notificationManager.cancel(0);
+
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(Call<DataResponse> call, Throwable t) {
                 loader.forceLoad();
                 notificationManager.cancel(0);
+                ringProgressDialog.dismiss();
             }
         });
+
     }
 
     private void init() {
@@ -156,7 +170,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
     }
 
     private void startAlarmReceiver() {
-        Log.d(Constants.LOG_TAG, "starting alarm!!!");
         Intent alarm = new Intent(this, AlarmReceiver.class);
         boolean alarmRunning = (PendingIntent.getBroadcast(this, 0, alarm, PendingIntent.FLAG_NO_CREATE) != null);
         if (alarmRunning == false) {
@@ -173,7 +186,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(this)
                 .setContentText("")
-                .setContentTitle("Loading...")
+                .setContentTitle(getString(R.string.loading))
                 .setSmallIcon(R.drawable.ic_link)
                 .setOngoing(false);
     }
@@ -211,7 +224,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
     @Override
     public Loader<List<Organisation>> onCreateLoader(int id, Bundle args) {
-        Log.d(Constants.LOG_TAG, "onCreateLoader");
         if (loader == null) {
             loader = new AsyncDbReader(this, dbManager);
         }
@@ -220,7 +232,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
     @Override
     public void onLoadFinished(Loader<List<Organisation>> loader, List<Organisation> data) {
-        Log.d(Constants.LOG_TAG, "loaded list size:" + data.size());
         organisations = data;
         ringProgressDialog.dismiss();
         if (organisations.size() == 0) {

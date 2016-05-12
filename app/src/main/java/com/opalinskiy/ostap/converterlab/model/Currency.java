@@ -1,12 +1,13 @@
 package com.opalinskiy.ostap.converterlab.model;
 
+
+
+
+
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 
 import java.io.Serializable;
 
-/**
- * Created by Evronot on 21.04.2016.
- */
 public class Currency  implements Serializable{
     private String idCurrency;
     private String nameCurrency;

@@ -1,8 +1,6 @@
 package com.opalinskiy.ostap.converterlab.model;
 
 
-import com.opalinskiy.ostap.converterlab.constants.Constants;
-
 import java.io.Serializable;
 
 public class Organisation implements Serializable {

@@ -84,14 +84,12 @@ public class MapActivity extends AbstractMapActivity implements LoaderManager.Lo
 
     @Override
     public Loader<LatLng> onCreateLoader(int id, Bundle args) {
-        Log.d(Constants.LOG_TAG, "onCreate MapLoader");
         mapLoader = new MapLoader(this, city, address);
         return mapLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<LatLng> loader, LatLng data) {
-        Log.d(Constants.LOG_TAG, "onLoadFinished MapLoader");
         if (!(data.latitude == 0.0 && data.longitude == 0.0)) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(data, mapLoader.getZoom()));
         } else {

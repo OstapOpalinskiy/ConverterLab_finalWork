@@ -2,14 +2,10 @@ package com.opalinskiy.ostap.converterlab.customView;
 
 import android.content.Context;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.model.Currency;
-import com.opalinskiy.ostap.converterlab.model.Organisation;
-
-import java.util.List;
 
 /**
  * Created by Evronot on 26.04.2016.

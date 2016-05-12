@@ -11,9 +11,11 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 
+import com.opalinskiy.ostap.converterlab.MainActivity;
 import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractActionActivity;
 import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
+
 
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class OrganisationsAdapter extends RecyclerView.Adapter<OrganisationsAdap
         this.handler = handler;
         this.organisations = contactList;
     }
+
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
