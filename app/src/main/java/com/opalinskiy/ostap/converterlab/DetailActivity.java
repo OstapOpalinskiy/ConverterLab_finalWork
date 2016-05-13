@@ -2,6 +2,8 @@ package com.opalinskiy.ostap.converterlab;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -19,9 +21,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.opalinskiy.ostap.converterlab.abstractActivities.AbstractActionActivity;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.customView.CurrencyListElementView;
-import com.opalinskiy.ostap.converterlab.customView.DummyView;
-import com.opalinskiy.ostap.converterlab.customView.ShareImageBody;
-import com.opalinskiy.ostap.converterlab.customView.ShareImageTitle;
+import com.opalinskiy.ostap.converterlab.customView.MyWidgetView;
 import com.opalinskiy.ostap.converterlab.fragments.ShareFragment;
 import com.opalinskiy.ostap.converterlab.model.Currency;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
@@ -102,8 +102,6 @@ public class DetailActivity extends AbstractActionActivity {
             elementView.setViews(list.get(i));
             llListElement.addView(elementView);
         }
-
-
     }
 
     private void setMenuListeners() {
@@ -164,20 +162,8 @@ public class DetailActivity extends AbstractActionActivity {
     }
 
     private void showImageInDialog() {
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.removeAllViews();
-        ShareImageTitle title = new ShareImageTitle(this, organisation);
-        //empty view sets width of layout
-        layout.addView(new DummyView(this));
-        layout.addView(title);
-        List<Currency> list = organisation.getCurrencies().getCurrencyList();
-
-        for (int i = 0; i < list.size(); i++) {
-            ShareImageBody currencyItem = new ShareImageBody(this, list.get(i));
-            layout.addView(currencyItem);
-        }
-        Bitmap bitmap = getBitmapFromView(layout);
+        MyWidgetView view = new MyWidgetView(this, organisation);
+        Bitmap bitmap = getBitmapFromView(view);
         String filePath = saveImage(bitmap);
         dialog = ShareFragment.newInstance(bitmap, filePath);
         dialog.show(DetailActivity.this.getFragmentManager(), Constants.DIALOG_FRAGMENT_TAG);
@@ -185,7 +171,6 @@ public class DetailActivity extends AbstractActionActivity {
 
 
     public Bitmap getBitmapFromView(View view) {
-
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
@@ -195,6 +180,25 @@ public class DetailActivity extends AbstractActionActivity {
         view.draw(canvas);
         return bitmap;
     }
+
+//    public static Bitmap getBitmapFromView(View view) {
+//        //Define a bitmap with the same size as the view
+//        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+//        //Bind a canvas to it
+//        Canvas canvas = new Canvas(returnedBitmap);
+//        //Get the view's background
+//        Drawable bgDrawable =view.getBackground();
+//        if (bgDrawable!=null)
+//            //has background drawable, then draw it on the canvas
+//            bgDrawable.draw(canvas);
+//        else
+//            //does not have background drawable, then draw white background on the canvas
+//            canvas.drawColor(Color.WHITE);
+//        // draw the view on the canvas
+//        view.draw(canvas);
+//        //return the bitmapErr
+//        return returnedBitmap;
+//    }
 
 
     private String saveImage(Bitmap finalBitmap) {
