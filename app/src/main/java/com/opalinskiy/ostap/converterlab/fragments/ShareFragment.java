@@ -10,13 +10,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.constants.Constants;
@@ -59,10 +63,19 @@ public class ShareFragment extends DialogFragment {
 
         imageView.setImageBitmap(bitmap);
         dialog.setContentView(layout);
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int displayHeight = displaymetrics.heightPixels;
+
+        int desiredHeight = displayHeight / 2;
+
+        Window window = dialog.getWindow();
+        window.setLayout(bitmap.getWidth(), desiredHeight);
+
         return dialog;
     }
 
-    //
     public static ShareFragment newInstance(Bitmap bitmapArg, String filePathArg) {
         ShareFragment dialog = new ShareFragment();
         Bundle args = new Bundle();

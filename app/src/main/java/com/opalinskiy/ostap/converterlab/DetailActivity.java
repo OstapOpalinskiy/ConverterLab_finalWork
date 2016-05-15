@@ -12,8 +12,10 @@ import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -162,7 +164,8 @@ public class DetailActivity extends AbstractActionActivity {
     }
 
     private void showImageInDialog() {
-        MyWidgetView view = new MyWidgetView(this, organisation);
+        MyWidgetView view = new MyWidgetView(this);
+        view.passOrganisation(organisation);
         Bitmap bitmap = getBitmapFromView(view);
         String filePath = saveImage(bitmap);
         dialog = ShareFragment.newInstance(bitmap, filePath);
@@ -180,26 +183,6 @@ public class DetailActivity extends AbstractActionActivity {
         view.draw(canvas);
         return bitmap;
     }
-
-//    public static Bitmap getBitmapFromView(View view) {
-//        //Define a bitmap with the same size as the view
-//        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
-//        //Bind a canvas to it
-//        Canvas canvas = new Canvas(returnedBitmap);
-//        //Get the view's background
-//        Drawable bgDrawable =view.getBackground();
-//        if (bgDrawable!=null)
-//            //has background drawable, then draw it on the canvas
-//            bgDrawable.draw(canvas);
-//        else
-//            //does not have background drawable, then draw white background on the canvas
-//            canvas.drawColor(Color.WHITE);
-//        // draw the view on the canvas
-//        view.draw(canvas);
-//        //return the bitmapErr
-//        return returnedBitmap;
-//    }
-
 
     private String saveImage(Bitmap finalBitmap) {
 

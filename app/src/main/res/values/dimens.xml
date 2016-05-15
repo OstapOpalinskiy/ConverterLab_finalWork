@@ -3,4 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="titleHeight">100dp</dimen>
+    <dimen name="itemHeight">40dp</dimen>
+    <dimen name="textMed">15sp</dimen>
+    <dimen name="textLarge">17.5sp</dimen>
+    <dimen name="currencyIdMargin">40dp</dimen>
+    <dimen name="askBidMargin">225dp</dimen>
 </resources>

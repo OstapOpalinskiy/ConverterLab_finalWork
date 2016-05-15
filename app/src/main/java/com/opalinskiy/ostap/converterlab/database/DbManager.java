@@ -142,7 +142,6 @@ public class DbManager {
 
     //writeOrgWithCondition
     private void smartWriteIntoDB(Organisation org) {
-        Log.d(Constants.LOG_TAG, "smart write");
         Cursor cursor = null;
         try {
             cursor = database.rawQuery("SELECT * FROM " + dbConstants.TABLE_ORGANIZATIONS, null);

@@ -1,14 +1,17 @@
 package com.opalinskiy.ostap.converterlab.customView;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.opalinskiy.ostap.converterlab.DetailActivity;
 import com.opalinskiy.ostap.converterlab.R;
 import com.opalinskiy.ostap.converterlab.model.Currency;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
@@ -17,23 +20,23 @@ import java.util.List;
 
 
 public class MyWidgetView extends View {
-    final int MIN_WIDTH = 300; //961
-    final int MIN_HEIGHT = 150;
-    final int DEFAULT_COLOR = Color.RED;
-    final int STROKE_WIDTH = 2;
-    private int mColor;
-    private Paint mPaint;
+
+    private Paint paint;
     private Organisation organisation;
     private List<Currency> currencies;
     private Context context;
     private int subTextColor;
+    private int displayWidth;
+    private int displayHeight;
+    private int titleHeight;
+    private int itemHeight;
+    private int largeTextSize;
+    private int medTextSize;
+    private Resources r;
 
-    public MyWidgetView(Context context, Organisation organisation) {
+    public MyWidgetView(Context context) {
         super(context);
         this.context = context;
-        this.organisation = organisation;
-        currencies = organisation.getCurrencies().getCurrencyList();
-        Log.d("TAG1", "constructor in view");
         init();
     }
 
@@ -49,70 +52,84 @@ public class MyWidgetView extends View {
     }
 
     private void init() {
-        subTextColor = context.getResources().getColor(R.color.textColorSecondary);
-        setMinimumWidth(MIN_WIDTH);
-        setMinimumHeight(MIN_HEIGHT);
-        mColor = DEFAULT_COLOR;
-        mPaint = new Paint();
+            subTextColor = context.getResources().getColor(R.color.textColorSecondary);
+            paint = new Paint();
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            ((DetailActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            displayHeight = displaymetrics.heightPixels;
+            displayWidth = displaymetrics.widthPixels;
+            r = context.getResources();
+            titleHeight = r.getDimensionPixelSize(R.dimen.titleHeight);
+            itemHeight = r.getDimensionPixelSize(R.dimen.itemHeight);
+            largeTextSize = r.getDimensionPixelSize(R.dimen.textLarge);
+            medTextSize = r.getDimensionPixelSize(R.dimen.textMed);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        //setMeasuredDimension(700, 700);
+        Log.d("TAG", "onMesure()");
+        if(currencies != null){
+            int viewWidth = (int) (displayWidth * 0.9);
+            int viewHeight = titleHeight + (itemHeight * currencies.size());
+            setMeasuredDimension(viewWidth, viewHeight);
+        } else{
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int offset = 200;
-        int padding = 80;
-        drawTitle(canvas, organisation);
-
-        for(int i = 0; i < currencies.size(); i++){
-            String askBid = currencies.get(i).getAsk().substring(0, 5) + "/" +
-                    currencies.get(i).getBid().substring(0, 5);
-            if(i == 0){
-                drawCurrency(canvas,offset , currencies.get(i).getIdCurrency(), askBid);
-            } else{
-                offset += padding;
-                drawCurrency(canvas, offset, currencies.get(i).getIdCurrency(), askBid);
+        Log.d("TAG", "onDraw()");
+            int offset = titleHeight;
+            drawTitle(canvas, organisation);
+            for (int i = 0; i < currencies.size(); i++) {
+                String askBid = currencies.get(i).getAsk().substring(0, 5) + "/" +
+                        currencies.get(i).getBid().substring(0, 5);
+                if (i == 0) {
+                    drawCurrency(canvas, titleHeight, currencies.get(i).getIdCurrency(), askBid);
+                } else {
+                    offset += itemHeight;
+                    drawCurrency(canvas, offset, currencies.get(i).getIdCurrency(), askBid);
+                }
             }
-
         }
-    }
 
     private void drawTitle(Canvas canvas, Organisation organisation) {
-        int offsetTop = 40;
-        int offsetLeft = 40;
-        int padding = 40;
 
-        mPaint.setColor(Color.BLACK);
-        mPaint.setTextSize(35);
+        int padding = itemHeight / 2;
 
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText(organisation.getTitle(), offsetLeft, offsetTop, mPaint);
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(largeTextSize);
 
-        mPaint.setTextSize(30);
-        mPaint.setColor(subTextColor);
-        canvas.drawText(organisation.getRegion(), offsetLeft, offsetTop + padding, mPaint);
-        canvas.drawText(organisation.getCity(), offsetLeft, offsetTop + 2 * padding, mPaint);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText(organisation.getTitle(), padding, padding, paint);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+
+        paint.setTextSize(medTextSize);
+        paint.setColor(subTextColor);
+        canvas.drawText(organisation.getRegion(), padding, padding + padding, paint);
+        canvas.drawText(organisation.getCity(), padding, padding + 2 * padding, paint);
     }
 
 
     private void drawCurrency(Canvas canvas, int offSet, String currency, String rate) {
-        mPaint.setTextSize(35);
-        int currencyColor = context.getResources().getColor(R.color.currencyColor);
-        mPaint.setColor(currencyColor);
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText(currency, 80, offSet, mPaint);
-        
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        mPaint.setColor(subTextColor);
-        canvas.drawText(rate, 450, offSet, mPaint);
-    }
+        int currencyIdMargin = r.getDimensionPixelOffset(R.dimen.currencyIdMargin);
+        int askBid = r.getDimensionPixelOffset(R.dimen.askBidMargin);
 
-    public void setColor(int color) {
-        mColor = color;
+        paint.setTextSize(largeTextSize);
+        int currencyColor = context.getResources().getColor(R.color.currencyColor);
+        paint.setColor(currencyColor);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText(currency, currencyIdMargin, offSet, paint);
+
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        paint.setColor(subTextColor);
+        canvas.drawText(rate, askBid, offSet, paint);
+    }
+    public void passOrganisation(Organisation organisation){
+        this.organisation = organisation;
+        currencies = organisation.getCurrencies().getCurrencyList();
+        requestLayout();
+        invalidate();
     }
 }
