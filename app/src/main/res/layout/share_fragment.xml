@@ -18,9 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_bitmap_SF"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+       <LinearLayout
+           android:id="@+id/ll_frame_SF"
+           android:orientation="vertical"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
     </ScrollView>
 </RelativeLayout>

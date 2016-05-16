@@ -69,7 +69,7 @@ public class MyWidgetView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Log.d("TAG", "onMeasure()");
         if(currencies != null){
-            int viewWidth = (int) (displayWidth * 0.9);
+            int viewWidth = (int) (displayWidth * 0.8);
             int viewHeight = titleHeight + (itemHeight * currencies.size());
             setMeasuredDimension(viewWidth, viewHeight);
         } else{
@@ -114,7 +114,7 @@ public class MyWidgetView extends View {
 
     private void drawCurrency(Canvas canvas, int offSet, String currency, String rate) {
         int currencyIdMargin = r.getDimensionPixelOffset(R.dimen.currencyIdMargin);
-        int askBidMargin = (int) (this.getWidth() * 0.65);
+        int askBidMargin = (int) (this.getWidth() * 0.60);
 
         paint.setTextSize(largeTextSize);
         int currencyColor = context.getResources().getColor(R.color.currencyColor);

@@ -13,8 +13,8 @@ import com.opalinskiy.ostap.converterlab.model.Organisation;
 import java.util.List;
 
 public class AsyncDbReader extends AsyncTaskLoader<List<Organisation>> {
-    List<Organisation> organisations;
-    DbManager dbManager;
+    private List<Organisation> organisations;
+    private DbManager dbManager;
 
     public AsyncDbReader(Context context, DbManager dbManager) {
         super(context);

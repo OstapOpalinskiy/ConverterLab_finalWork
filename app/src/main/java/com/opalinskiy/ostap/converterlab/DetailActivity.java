@@ -164,48 +164,7 @@ public class DetailActivity extends AbstractActionActivity {
     }
 
     private void showImageInDialog() {
-        MyWidgetView view = new MyWidgetView(this);
-        view.passOrganisation(organisation);
-        Bitmap bitmap = getBitmapFromView(view);
-        String filePath = saveImage(bitmap);
-        dialog = ShareFragment.newInstance(bitmap, filePath);
+        dialog = ShareFragment.newInstance(organisation);
         dialog.show(DetailActivity.this.getFragmentManager(), Constants.DIALOG_FRAGMENT_TAG);
-    }
-
-
-    public Bitmap getBitmapFromView(View view) {
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        view.draw(canvas);
-        return bitmap;
-    }
-
-    private String saveImage(Bitmap finalBitmap) {
-
-        String root = Environment.getExternalStorageDirectory().toString();
-        String rootPath = root + "/saved_images";
-        File myDir = new File(rootPath);
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + organisation.getTitle() + n + ".jpg";
-        String fullPath = rootPath + fname;
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return fullPath;
     }
 }

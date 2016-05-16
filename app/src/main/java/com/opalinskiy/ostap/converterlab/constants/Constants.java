@@ -17,11 +17,10 @@ public class Constants {
    public static final String ORG_SERIALISE = "serialise org";
    public static final String VERY_OLD_DATE = "1971-04-24T12:01:37+03:00";
    public static final int THIRTY_MINUTES = 1800000;
-   public static final String BITMAP_KEY = "title";
-   public static final String MESSAGE_KEY = "message";
+   public static final String LIST_KEY = "title";
    public static final String DIALOG_FRAGMENT_TAG = "share dialog";
-   public static final String FILE_PATH_KEY = "file name key";
    public static final String CALL_ALLOWED = "call allowed";
    public static final int LOADER_ID = 0;
    public static final int MAP_LOADER_ID = 1;
+   public static final int BITMAP_SAVER_ID = 2;
 }
