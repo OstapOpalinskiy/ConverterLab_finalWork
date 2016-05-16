@@ -67,7 +67,7 @@ public class MyWidgetView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.d("TAG", "onMesure()");
+        Log.d("TAG", "onMeasure()");
         if(currencies != null){
             int viewWidth = (int) (displayWidth * 0.9);
             int viewHeight = titleHeight + (itemHeight * currencies.size());
@@ -114,7 +114,7 @@ public class MyWidgetView extends View {
 
     private void drawCurrency(Canvas canvas, int offSet, String currency, String rate) {
         int currencyIdMargin = r.getDimensionPixelOffset(R.dimen.currencyIdMargin);
-        int askBid = r.getDimensionPixelOffset(R.dimen.askBidMargin);
+        int askBidMargin = (int) (this.getWidth() * 0.65);
 
         paint.setTextSize(largeTextSize);
         int currencyColor = context.getResources().getColor(R.color.currencyColor);
@@ -124,7 +124,7 @@ public class MyWidgetView extends View {
 
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setColor(subTextColor);
-        canvas.drawText(rate, askBid, offSet, paint);
+        canvas.drawText(rate, askBidMargin, offSet, paint);
     }
     public void passOrganisation(Organisation organisation){
         this.organisation = organisation;

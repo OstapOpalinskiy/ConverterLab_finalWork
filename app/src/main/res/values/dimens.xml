@@ -8,5 +8,4 @@
     <dimen name="textMed">15sp</dimen>
     <dimen name="textLarge">17.5sp</dimen>
     <dimen name="currencyIdMargin">40dp</dimen>
-    <dimen name="askBidMargin">225dp</dimen>
 </resources>
