@@ -30,8 +30,6 @@ public class OrganisationsAdapter extends RecyclerView.Adapter<OrganisationsAdap
         this.organisations = contactList;
     }
 
-
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_element_layout, viewGroup, false);
