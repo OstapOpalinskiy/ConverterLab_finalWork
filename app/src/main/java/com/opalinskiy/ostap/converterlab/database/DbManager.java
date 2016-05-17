@@ -150,15 +150,15 @@ public class DbManager {
                     if (org.getId().equals(cursor.getString(1))) {
                         if (isFirstOlder(cursor.getString(10), org.getDate())) {
                             updateDataInOrgsAndRates(org);
-                      //      Log.d(Constants.LOG_TAG, "updated: ");
+                            Log.d(Constants.LOG_TAG, "updated: ");
                         }
-                       // Log.d(Constants.LOG_TAG, "ignoring data is actual ");
+                        Log.d(Constants.LOG_TAG, "ignoring data is actual ");
                         return;
                     }
                 } while (cursor.moveToNext());
             }
             writeDataIntoOrgsTable(org);
-            //Log.d(Constants.LOG_TAG, "written ");
+            Log.d(Constants.LOG_TAG, "written ");
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG, "exception caught in smartWriteIntoDB()", e);
         } finally {
@@ -257,9 +257,9 @@ public class DbManager {
             cv.put(dbConstants.COLUMN_CHANGE_ASK, listCurrencies.get(i).getChangeAsk());
             cv.put(dbConstants.COLUMN_BID_CURRENCY, listCurrencies.get(i).getBid());
             cv.put(dbConstants.COLUMN_CHANGE_BID, listCurrencies.get(i).getChangeBid());
-            database.update(dbConstants.TABLE_EXCHANGE_RATES, cv, "idOrganization=" + "'" + organisation.getId() + "'", null);
+            database.update(dbConstants.TABLE_EXCHANGE_RATES, cv, "idOrganization=" + "'" + organisation.getId()
+                    + "' AND idCurrency=" + "'" + listCurrencies.get(i).getIdCurrency() + "'", null);
         }
-
     }
 
     private Cursor getRatesTable() {

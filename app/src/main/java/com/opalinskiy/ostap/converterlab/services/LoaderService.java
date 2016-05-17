@@ -49,11 +49,13 @@ public class LoaderService extends IntentService {
         Response<DataResponse> response = null;
         try {
             response = connectHelper.getResponseSynchronous();
-            DataResponse data = response.body();
-            organisations = data.getOrganizations();
-            dbManager.setRatesVariationForList(organisations);
-            dbManager.writeAllDataToDb(data);
-            updateNotification(getString(R.string.db_updated));
+            if(response != null){
+                DataResponse data = response.body();
+                organisations = data.getOrganizations();
+                dbManager.setRatesVariationForList(organisations);
+                dbManager.writeAllDataToDb(data);
+                updateNotification(getString(R.string.db_updated));
+            }
         } catch (IOException e) {
             e.printStackTrace();
             updateNotification(getString(R.string.db_cant_update));
