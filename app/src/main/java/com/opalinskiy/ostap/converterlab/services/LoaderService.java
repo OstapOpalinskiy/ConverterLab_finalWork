@@ -15,6 +15,7 @@ import com.opalinskiy.ostap.converterlab.constants.Constants;
 import com.opalinskiy.ostap.converterlab.database.DbManager;
 import com.opalinskiy.ostap.converterlab.model.DataResponse;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
+import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectHelper;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectRetrofit;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.CustomDeserializer;
 
@@ -31,6 +32,7 @@ public class LoaderService extends IntentService {
     private List<Organisation> organisations;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
+    private ConnectHelper connectHelper;
 
     public LoaderService() {
         super("LoaderService");
@@ -43,28 +45,15 @@ public class LoaderService extends IntentService {
         dbManager.open();
         prepareNotification();
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(DataResponse.class, new CustomDeserializer());
-        final Gson gson = gsonBuilder.create();
-
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(Constants.DATA_SOURCE_KEY)
-                .build();
-
-        ConnectRetrofit connection = retrofit.create(ConnectRetrofit.class);
-        Call<DataResponse> call = connection.connect();
+        connectHelper = ConnectHelper.getInstance();
         Response<DataResponse> response = null;
-
         try {
-            response = call.execute();
-                    DataResponse data = response.body();
-
+            response = connectHelper.getResponseSynchronous();
+            DataResponse data = response.body();
             organisations = data.getOrganizations();
             dbManager.setRatesVariationForList(organisations);
             dbManager.writeAllDataToDb(data);
             updateNotification(getString(R.string.db_updated));
-
         } catch (IOException e) {
             e.printStackTrace();
             updateNotification(getString(R.string.db_cant_update));

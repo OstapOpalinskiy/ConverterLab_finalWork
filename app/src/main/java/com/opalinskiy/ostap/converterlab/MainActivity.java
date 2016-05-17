@@ -34,6 +34,7 @@ import com.opalinskiy.ostap.converterlab.model.DataResponse;
 import com.opalinskiy.ostap.converterlab.model.Organisation;
 import com.opalinskiy.ostap.converterlab.receivers.AlarmReceiver;
 import com.opalinskiy.ostap.converterlab.services.LoaderService;
+import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectHelper;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectRetrofit;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.ConnectionDetector;
 import com.opalinskiy.ostap.converterlab.utils.connectUtils.CustomDeserializer;
@@ -60,7 +61,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
     private Loader<List<Organisation>> loader;
     private ProgressDialog ringProgressDialog;
     private ConnectionDetector connectionDetector;
-
+    private ConnectHelper connectHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,20 +105,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
 
     private void loadDataFromServer() {
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(DataResponse.class, new CustomDeserializer());
-        final Gson gson = gsonBuilder.create();
-
-        final Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(Constants.DATA_SOURCE_KEY)
-                .build();
-
-        ConnectRetrofit connection = retrofit.create(ConnectRetrofit.class);
-        Call<DataResponse> call = connection.connect();
-
-        call.enqueue(new Callback<DataResponse>() {
-
+        connectHelper.getResponseAsynchronous(new Callback<DataResponse>() {
             @Override
             public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
                 DataResponse data = response.body();
@@ -127,7 +115,6 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 swipeRefreshLayout.setRefreshing(false);
                 ringProgressDialog.dismiss();
                 notificationManager.cancel(0);
-
             }
 
             @Override
@@ -136,9 +123,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 notificationManager.cancel(0);
                 ringProgressDialog.dismiss();
             }
-        });
-
-    }
+        });}
 
     private void init() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_MA);
@@ -151,6 +136,7 @@ public class MainActivity extends AbstractActionActivity implements SwipeRefresh
                 .make(swipeRefreshLayout, "", Snackbar.LENGTH_INDEFINITE);
         connectionDetector = new ConnectionDetector(this);
         getLoaderManager().initLoader(Constants.LOADER_ID, null, MainActivity.this);
+        connectHelper = ConnectHelper.getInstance();
     }
 
     private void startLoaderService() {
