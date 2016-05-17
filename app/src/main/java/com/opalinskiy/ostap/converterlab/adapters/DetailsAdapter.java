@@ -32,6 +32,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         prepareList(currencyList);
     }
 
+// creates copy of currency list with two dummy objects in the beginning of the list
     private void prepareList(List<Currency> currencyList) {
         newList = new LinkedList<Currency>();
         for(Currency c: currencyList){
@@ -42,7 +43,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
         newList.add(1, new Currency());
         Log.d("TAG", "new list after: " + newList);
     }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
@@ -80,7 +80,6 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             case 1:
                 break;
             default:
-
                 Currency currency = newList.get(i);
                 Resources r = context.getResources();
                 ItemHolder itemHolder = (ItemHolder) viewHolder;
@@ -105,7 +104,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                 }
 
                 if(i == 2){
-                    itemHolder.ivDivider.setBackground(null);
+                    itemHolder.ivDivider.setImageResource(0);
                 }
                 break;
         }

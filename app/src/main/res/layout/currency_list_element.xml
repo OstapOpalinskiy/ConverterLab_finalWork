@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     card_view:cardElevation="0dp"
     card_view:cardMaxElevation="0dp"
+    android:layout_marginLeft="21dp"
+    android:layout_marginRight="21dp"
     android:background="@color/cardColor">
 
         <LinearLayout

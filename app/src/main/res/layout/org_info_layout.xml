@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_company_info_DA"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
+    card_view:cardElevation="5dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:layout_marginTop="16dp"
     android:background="@color/cardColor">
 
         <LinearLayout
